@@ -1,0 +1,204 @@
+/* disable text selection */
+
+svg *::selection {
+    background: transparent;
+}
+
+svg *::-moz-selection {
+    background: transparent;
+}
+
+svg *::-webkit-selection {
+    background: transparent;
+}
+
+body {
+    font-family: Helvetica;
+    font-size: 10px;
+    padding: 10px;
+}
+
+
+/*Levenstein distance grid style*/
+
+.rect {
+    fill: #222;
+}
+
+rect.cell-border {
+    stroke: #837B7A;
+    stroke-width: 0.3px;
+}
+
+rect.cell-hover {
+    stroke: rgb(255, 0, 0);
+    stroke-width: 1.0px;
+}
+
+text.text-hover {
+    fill: #00C;
+    font-weight: bold;
+}
+
+text.text-highlight {
+    fill: rgb(255, 0, 0);
+    font-weight: bold;
+}
+
+
+/**/
+
+#tooltip {
+    position: absolute;
+    width: 200px;
+    height: auto;
+    padding: 10px;
+    background-color: white;
+    -webkit-border-radius: 10px;
+    -moz-border-radius: 10px;
+    border-radius: 10px;
+    -webkit-box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.4);
+    -moz-box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.4);
+    box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.4);
+    pointer-events: none;
+}
+
+#tooltip.hidden {
+    display: none;
+}
+
+#tooltip p {
+    margin: 0;
+    font-family: sans-serif;
+    font-size: 12px;
+    line-height: 20px;
+}
+
+div.tooltip {
+    position: absolute;
+    text-align: center;
+    width: auto;
+    height: auto;
+    padding: 2px;
+    font: 12px sans-serif;
+    background: lightsteelblue;
+    border: 0px;
+    border-radius: 8px;
+    pointer-events: none;
+}
+
+div2.tooltip {
+    position: absolute;
+    text-align: center;
+    width: auto;
+    height: auto;
+    padding: 10px;
+    font: 12px sans-serif;
+    background: lightpink;
+    border: solid;
+    border-width: 1px;
+    border-radius: 8px;
+    pointer-events: none;
+    left: 500px;
+}
+
+
+/*Top nav bar -- "machine learning" */
+
+.topnav {
+    background-color: rgb(255, 255, 255);
+    overflow: hidden;
+    text-align: center;
+    padding: 5px;
+    height: 75px;
+    margin-bottom: 10px;
+}
+
+
+/* Style the navbar -- Drug sticky bar -- "paclitaxel" */
+
+#navbar {
+    overflow: hidden;
+    background-color: rgb(59, 59, 59);
+    padding: 5px;
+    z-index: 1000;
+}
+
+
+/* Page content */
+
+.content {
+    padding: 16px;
+}
+
+
+/* The sticky class is added to the navbar with JS when it reaches its scroll position */
+
+.sticky {
+    position: fixed;
+    top: 0;
+    width: 100%;
+}
+
+
+/* Add some top padding to the page content to prevent sudden quick movement (as the navigation bar gets a new position at the top of the page (position:fixed and top:0) */
+
+.sticky+.content {
+    padding-top: 60px;
+}
+
+
+/*LOGO -- Western U */
+
+#logo {
+    float: left;
+    max-height: 100%;
+}
+
+
+/*cell organization of top row */
+
+.flexcontainer {
+    display: flex;
+}
+
+.fixed {
+    width: 500px;
+    font-family: "Times New Roman";
+    font-size: 10px;
+    padding: 0px;
+    margin-right: 150px;
+}
+
+.flex-item {
+    flex-grow: +20;
+    font-family: "Times New Roman";
+    font-size: 12px;
+}
+
+.dropdown-content {
+    z-index: 999;
+    /* One more than the header. */
+}
+
+.main {
+    font-family: "Times New Roman";
+    /*z-index: -1;*/
+    position: relative;
+}
+
+.key {
+    font-family: "Times New Roman";
+    font-size: 12px;
+    margin-top: 20px;
+    margin-bottom: 100px;
+}
+
+.container {
+    font-family: "Times New Roman";
+    font-size: 12px;
+}
+
+.row {
+    clear: both;
+}

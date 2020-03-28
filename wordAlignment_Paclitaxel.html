@@ -1,0 +1,233 @@
+<html>
+<style>
+
+</style>
+
+<head>
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+    <meta http-equiv="Pragma" content="no-cache" />
+    <meta http-equiv="Expires" content="0" />
+
+    <!--D3 library-->
+    <script src="https://d3js.org/d3.v5.min.js"></script>
+    <!-- jQuery library -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+</head>
+
+<div class="container">
+    <div class="row">
+        <div class="col">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/59/Taxol.svg/1200px-Taxol.svg.png"
+                style="height: 150px; z-index: -1;" />
+        </div>
+        <div class="col-9 key" style="text-align:left">
+            <font face="Times New Roman" size=+1>The plant alkaloid <b>paclitaxel</b> is an antimicrotubule agent that
+                inhibits microtubule structures in the cell. It does so by binding to the &beta; subunit of tubulin, the
+                building block of microtubules, to hyperstabilize it. This prevents
+                the microtubules from growing or shrinking, which is necessary for their function in tranportation in
+                the cell.
+            </font>
+        </div>
+    </div>
+</div>
+
+<!--Signature Alignment-->
+<div class="flexcontainer" style="margin-left: 0px">
+    <div class="fixed" style="width: 600px; display: table-cell;">
+        <h2><b>Signature Alignment</b></h2>
+        <font size=+0.5>Hover over <i>Model</i> label on left y axis for model details.<br>
+            Check the <var>"Sort with Levenshtein distances"</var> box to reorder signatures by Levenshtein score (calculated against model with lowest levenshtein distance summation score).
+        </font>
+
+        <div id="grid"> </div>
+        <div class="container">
+            <!-- Drop-down menu-->
+            <div class="row">
+                <div class="col-8">
+                    Display Options:
+                    <select id="order">
+                        <option value="sortMCC">Top 10 by Matthew's Correlation Coefficient (MCC)</option>
+                        <option value="sortLogloss">Top 10 by Log Loss</option>
+                        <option value="sortMisclass">Top 10 by Misclassification</option>
+                        <option value="sortGOF">Top 10 by Goodness of Fit</option>
+                        <!--<option value="custom">by log2 ratio</option>-->
+                    </select>
+                </div>
+                <div class="col">
+                    <label class="checkbox-inline" id="checkbox_levenshtein"><input type="checkbox" value="">Sort with Levenshtein
+                        distances</label>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="flex-item" display: table-cell; ">
+        <font size=" +1"><b><u>Key:</u></b><br></font>
+        <font color="limegreen"><b><strong>Gene</strong></b></font>: Consensus gene; gene appears in more than one
+        signature displayed <br>
+        <b>C Value:</b> In Support Vector Machine models, controls the trade off between training errors and margin
+        maximization<br>
+        <b>Sigma Value:</b> In Support Vector Machine models, controls the reach of each training point, with a low
+        sigma value indicating a far reach<br>
+        <br>
+        Model id <b><i>x </i>deg0 -<i> y </i>deg1 -<i> z </i>deg2:</b> MFA correlation threshold is <b>x degrees for
+            primary genes</b> (intial gene pool, known relation to chemotherapeutic in literature), <b>y degrees for
+            secondary genes</b>, and <b>z degrees for tertiary genes</b><br>
+        <br>
+        Model <var>number</var> indicates ranking of model based on the chosen performance metric.<br>
+        <br>
+        <font size="+1"><b><u>Performance metric:</u></b><br>
+            <span id="performanceMetric" style = "font-weight: 700;"></span></font>
+        <p> <span id="performanceMetric_definition"></span></p>
+
+    </div>
+
+</div>
+
+<!--Levenshtein distances-->
+<div class="container" style="margin-left: 0px">
+    <div class="row">
+        <br>
+        <h2><b>Compare Models by Levenshtein Distances</b>
+            <br>
+            <font size=+0.5>Figure automatically updates with above Signature Alignment figure.</font>
+            <font size=+0.5>Hover over <i>cell</i> for details.</font>
+        </h2>
+
+    </div>
+    <div class="row">
+        <div class="col">
+            <div id="levenshtein" style="width: 700px; height: 400px; overflow: hidden"></div>
+        </div>
+        <div class="col">
+            <h4><b>Levenshtein distances:</b></h4>
+            A string metric used in information theory to measure the difference between two sequences. In this case,
+            the levenshtein distance measures the difference between the gene signatures of two models.
+            <br>
+            <br>A lower levenshtein distance score (green) indicates higher similarity between the gene signatures of 2
+            models.
+            <br>Levenshtein distances were not calculated for models with identical gene signatures (grey).
+            <br>
+            <br>The sum of the levenshtein distances of each pairwise distance for one model (row against columns) can
+            be found on the right y axis. The lowest Levenshtein distance summation score is bolded.
+            <br>
+            <br>
+            <font size=+1><u>Currently comparing signatures for:</u>
+                <br><span id="levenshtein_performanceMetric"></span></font>
+            <br>
+            <br>
+            <font size=+1><u>Gene signature with the lowest Levenstein distance summation score:</u>
+                <br><span id="levenshtein_lowestLD"></span></font>
+
+        </div>
+
+    </div>
+
+    <!--<div  class = "row" id="levenshtein" style="overflow:hidden; height:500px; padding:0px; width:600px"></div> -->
+</div>
+
+<!--Performance metrics-->
+<div class="container" style="margin-top: 20px; margin-left: 0px; height:auto; width:100%;">
+    <div class="row" style="width: 100%;">
+        <h2><b>Compare across performance metrics</b>
+            <br>
+            <font size=+0.5>Hover over <i>data point</i> for model details.</font>
+        </h2>
+
+    </div>
+
+    <div class="row" id="my_dataviz" style="overflow:auto; height:auto; padding:10px; width:100%"></div>
+    <br>
+
+    <!-- Drop-down list for X axis-->
+    <div class="row" style="margin-left:10px">
+        <label for="Var 1"> X axis variable &nbsp</label>
+        <select id="Var 1">
+            <option value="Misclass">Misclassification score</option>
+            <option value="LogLoss">LogLoss</option>
+            <option value="GOF" selected>Goodness of Fit</option>
+            <option value="Accuracy0">Accuracy of Sensitive Predictions</option>
+            <option value="Accuracy1">Accuracy of Resistant Predictions</option>
+            <option value="MCC">MCC</option>
+        </select>
+    </div>
+    <br>
+    <!-- Drop-down list for Y axis-->
+    <div class="row" style="margin-left:10px">
+        <label for="Var 2"> Y axis variable &nbsp</label>
+        <select id="Var 2">
+            <option value="Misclass">Misclassification score</option>
+            <option value="LogLoss">LogLoss</option>
+            <option value="GOF">Goodness of Fit</option>
+            <option value="Accuracy0">Accuracy of Sensitive Predictions</option>
+            <option value="Accuracy1">Accuracy of Resistant Predictions</option>
+            <option value="MCC" selected>MCC</option>
+        </select>
+    </div>
+</div>
+<br>
+
+<!-- Add buttons -->
+<button id="button_submit">Submit
+</button>
+</div>
+
+
+
+
+<script>
+    var url = "wordAlignment.js";
+    $.getScript(url);
+
+    var url_scatterplot = "scatterplot_models_2.js";
+    $.getScript(url_scatterplot);
+
+
+
+    ///change performance metric text////
+    $("#order").on('change', function (event) {
+        label = returnLabel(this.value);
+        definition = returnDefinition(this.value);
+        document.getElementById('performanceMetric').innerHTML = label;
+        document.getElementById('performanceMetric_definition').innerHTML = definition;
+        document.getElementById('levenshtein_performanceMetric').innerHTML = label;
+    });
+
+    $(document).ready(function () {
+        value = "sortMCC"
+        label = returnLabel(value);
+        definition = returnDefinition(value);
+        document.getElementById('performanceMetric').innerHTML = label;
+        document.getElementById('performanceMetric_definition').innerHTML = definition;
+        document.getElementById('levenshtein_performanceMetric').innerHTML = label;
+
+    });
+
+    function returnLabel(label) {
+        switch (label) {
+            case "sortMCC": return "Matthews Correlation Coefficient (MCC) ";
+            case "sortLogloss": return "Log Loss ";
+            case "sortMisclass": return "Misclassification ";
+            case "sortGOF": return "Goodness of Fit (GOF) ";
+            default: console.log(label, "wrong value ");
+        }
+    }
+
+    function returnDefinition(label) {
+        switch (label) {
+            case "sortMCC": return "A measure of the quality of binary classifications as a score from -1 to 1, with -1 indicating perfectly opposite predictions, +1 indicating perfect prediction, and 0 indicating random prediction. Model performance increases with higher absolute value of MCC. ";
+            case "sortLogloss": return "The performance of a classification model, with a perfect model having a score of 0. Log loss penalizes false classifications. ";
+            case "sortMisclass": return "Percentage of cases misclassified by model. A misclassification score of 0 means that no cases were misclassified. ";
+            case "sortGOF": return "Describes how well a model fits a set of observations, with decreased model performance as GOF increases ";
+            default: console.log(label, "wrong value ");
+        }
+    }
+</script>
+
+<script>
+    //levenshtein script
+    var url_levenshtein = "levenshteinDistances.js";
+    $.getScript(url_levenshtein);
+</script>
+
+</html>
